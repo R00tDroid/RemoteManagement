@@ -2,6 +2,9 @@
 
 A cross-platform web-based remote management toolkit.
 
+[![CodeFactor](https://www.codefactor.io/repository/github/r00tdroid/remotemanagement/badge)](https://www.codefactor.io/repository/github/r00tdroid/remotemanagement)
+[![Build](https://github.com/R00tDroid/RemoteManagement/actions/workflows/build.yml/badge.svg)](https://github.com/R00tDroid/RemoteManagement/actions/workflows/build.yml)
+
 ---
 
 ## How to build
