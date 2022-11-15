@@ -16,9 +16,18 @@ CPMAddPackage(NAME httpparser
     VERSION 2.9.4
 )
 
+add_library(http_parser STATIC
+    ${httpparser_SOURCE_DIR}/http_parser.c
+)
+
+if (MSVC)
+    target_compile_options(http_parser PUBLIC /WX- /W1)
+else()
+    target_compile_options(http_parser PUBLIC -w)
+endif()
+
 add_executable(Server
     ${SourceFiles}
-    ${httpparser_SOURCE_DIR}/http_parser.c
 )
 
 target_compile_features(Server PRIVATE cxx_std_17)
@@ -32,6 +41,7 @@ target_include_directories(Server PUBLIC
 target_link_libraries(Server
     Server::rc
     fmt
+    http_parser
 )
 
 if (UNIX)
