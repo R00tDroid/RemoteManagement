@@ -1,5 +1,6 @@
 #include <cmrc/cmrc.hpp>
 #include <filesystem>
+#include "Resources.h"
 
 #pragma warning(push)
 #pragma warning(disable: 4324)
@@ -7,10 +8,6 @@
 #pragma warning(disable: 4456)
 #include <restinio/all.hpp>
 #pragma warning(pop)
-
-CMRC_DECLARE(ServerResources);
-
-cmrc::embedded_filesystem* ResourceFS = nullptr;
 
 restinio::request_handling_status_t handler(restinio::request_handle_t Request)
 {
@@ -25,9 +22,9 @@ restinio::request_handling_status_t handler(restinio::request_handle_t Request)
 
         TargetResource = "Resources/" + TargetResource;
 
-        if (ResourceFS->exists(TargetResource))
+        if (ResourceFS().exists(TargetResource))
         {
-            cmrc::file File = ResourceFS->open(TargetResource);
+            cmrc::file File = ResourceFS().open(TargetResource);
             std::string FileData(File.begin(), File.end());
 
             std::string Extension = std::filesystem::path(TargetResource).extension().string();
@@ -54,9 +51,6 @@ restinio::request_handling_status_t handler(restinio::request_handle_t Request)
 
 int main()
 {
-    cmrc::embedded_filesystem FS = cmrc::ServerResources::get_filesystem();
-    ResourceFS = &FS;
-
     restinio::run(
         restinio::on_this_thread()
         .port(8080)
