@@ -33,3 +33,8 @@ target_link_libraries(Server
     Server::rc
     fmt
 )
+
+if (UNIX)
+    find_package(Threads)
+    target_link_libraries(Server ${CMAKE_THREAD_LIBS_INIT})
+endif()
