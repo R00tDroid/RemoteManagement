@@ -12,4 +12,9 @@ class WebServer
 public:
     void Init();
     void Destroy();
+
+private:
+    typedef restinio::http_server_t<restinio::default_traits_t> ServerType;
+    ServerType* Server = nullptr;
+    std::thread* ServerThread = nullptr;
 };

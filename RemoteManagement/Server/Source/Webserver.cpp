@@ -44,15 +44,36 @@ restinio::request_handling_status_t RequestHandler(restinio::request_handle_t Re
 
 void WebServer::Init()
 {
-    //TODO Start server async
-    restinio::run(
-        restinio::on_this_thread()
-        .port(8080)
-        .address("localhost")
-        .request_handler(RequestHandler));
+    Server = new ServerType
+    {
+       restinio::own_io_context(),
+       [](auto& settings)
+        {
+            settings.port(8080);
+            settings.address("localhost");
+            settings.request_handler(RequestHandler);
+        }
+    };
+
+    ServerThread = new std::thread
+    {
+        [this]
+        {
+            restinio::run(restinio::on_thread_pool(4, restinio::skip_break_signal_handling(), *Server));
+        }
+    };
 }
 
 void WebServer::Destroy()
 {
-    //TODO Stop and destroy server
+    if (Server != nullptr) 
+    {
+        restinio::initiate_shutdown(*Server);
+        ServerThread->join();
+
+        delete Server;
+        delete ServerThread;
+        Server = nullptr;
+        ServerThread = nullptr;
+    }
 }
